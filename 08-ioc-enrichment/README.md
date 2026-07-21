@@ -1,0 +1,46 @@
+# Lab 08: IOC Enrichment & Threat Hunting
+
+> _One-line summary of what this lab demonstrates (fill in when complete)._
+
+**Domain:** Threat Intel
+**Tools:** VirusTotal, AbuseIPDB, URLhaus, AlienVault OTX
+**MITRE ATT&CK:** N/A
+**Status:** 🚧 Planned
+**Date:** _fill in_
+
+---
+
+## Objective
+
+Take indicators found in earlier labs (hashes, IPs, domains), enrich them with free threat-intel services, write a short threat profile, and hunt for the IOCs across SIEM data.
+
+## Environment
+
+- Attacker: Kali Linux (192.168.56.10)
+- Victim: Windows 11 (192.168.56.20)
+- SIEM: Splunk on Ubuntu Server (192.168.56.30)
+- Network: host-only, isolated
+
+## What I did
+
+_Step-by-step, reproducible, with the actual commands and queries. Capture screenshots as you go into `images/` and embed them like:_
+
+```markdown
+![description](images/example.png)
+```
+
+## Findings
+
+_What I observed — key events, indicators, event IDs._
+
+## Detection / analysis
+
+_The detection logic I wrote, any false positive I hit, and how I tuned it._
+
+## Lessons learned
+
+_What surprised me, what I'd do differently, the real-world scenario this maps to._
+
+## References
+
+- _links to tools, ATT&CK techniques, and sources_

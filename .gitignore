@@ -1,0 +1,21 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Never commit real malware samples or live captures with sensitive data
+*.exe
+*.dll
+*.bin
+malware/
+samples/
+
+# Large raw pcaps (commit trimmed/sanitized ones intentionally)
+*.pcap
+*.pcapng
+!07-pcap-malicious-traffic/pcaps/README.md
+
+# Secrets / creds — never commit
+*.key
+*.pem
+secrets*
+credentials*
