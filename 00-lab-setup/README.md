@@ -45,14 +45,16 @@ Every action in these labs — running attacks, detonating suspicious traffic, m
 2. Install both (the Extension Pack adds USB and other device support).
 3. Verify it launches and shows the VirtualBox Manager.
 
-*(Screenshot: VirtualBox Manager, empty.)*
-
 ## Step 2 — Create the isolated network
 
 This is the most important step. You'll use a **Host-only network**, which lets your VMs talk to each other and (optionally) to your host, but never to the internet or your real network.
 
 1. In VirtualBox: **Tools → Network → Host-only Networks → Create**.
 2. Note the network address it assigns (commonly `192.168.56.0/24`). Disable its DHCP server if you want to assign static IPs manually (recommended, so IPs stay stable across your writeups).
+
+![VirtualBox Manager Host-only Networks tab showing the VirtualBox Host-Only Ethernet Adapter at 192.168.56.0/24 with the DHCP Server disabled and the adapter configured manually](images/Step2_virtualbox_setup.png)
+
+*VirtualBox Manager — host-only network `192.168.56.0/24` created with DHCP disabled and a manually configured adapter.*
 
 > **Tip:** During initial VM installs you may temporarily attach a NAT adapter to download updates/tools, then **remove it** and leave only the host-only adapter for lab work. Do your attacking with internet access OFF.
 
@@ -63,7 +65,7 @@ This is the most important step. You'll use a **Host-only network**, which lets 
 3. Boot, log in (default creds `kali` / `kali`), and change the password.
 4. Assign a static IP `192.168.56.10` (via the network settings or `/etc/network/interfaces`).
 
-*(Screenshot: Kali desktop + `ip a` output showing .10.)*
+![kali linux window showing ip address as 192.168.56.10](images/Step3.png)
 
 ## Step 4 — Build the victim: Windows 11 Enterprise (evaluation)
 
