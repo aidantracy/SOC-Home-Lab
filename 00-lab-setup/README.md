@@ -100,6 +100,42 @@ This VM will host Splunk in **Lab 01**.
 
 For each VM: **right-click → Snapshot → Take**, name it `clean-baseline`. From now on, snapshot before every lab and roll back after. This is what makes your labs reproducible and your screenshots repeatable.
 
+## Troubleshooting: VBS / Hyper-V black screen (green turtle)
+
+The most common blocker when building this lab on a Windows 11 host: a VM (Windows 11 victim especially) boots to a **black screen** and VirtualBox shows a small **green turtle** icon in the status bar. The turtle means VirtualBox couldn't get hardware virtualization and fell back to slow software emulation — because **Windows' own hypervisor is holding the virtualization hardware**. VirtualBox (hardware-accelerated) and the Windows hypervisor can't both own it at once.
+
+**Root causes, in order of likelihood**
+
+1. **Hyper-V / related Windows features enabled.** Turn off in *"Turn Windows features on or off"*: Hyper-V, Windows Hypervisor Platform, Virtual Machine Platform, Windows Subsystem for Linux. Reboot.
+2. **Hypervisor still launching at boot.** In an **admin** prompt: `bcdedit /set hypervisorlaunchtype off` then reboot.
+3. **Core Isolation / Memory Integrity on.** Windows Security → Device Security → Core isolation → Memory Integrity → Off. Reboot.
+4. **Virtualization-Based Security (VBS) enabled, often with a UEFI lock** (frequently on by default on Windows 11). Check with `msinfo32` → *Virtualization-based security*. If it says **Running** after the steps above, clear it with Microsoft's **Device Guard and Credential Guard hardware readiness tool**:
+   ```powershell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+   cd <folder containing the tool>
+   .\DG_Readiness_Tool_v3.6.ps1 -Disable
+   ```
+   Reboot, and **watch for a firmware prompt during startup** to confirm disabling the security feature — press the key it names, or VBS stays locked on. After reboot, `msinfo32` should read *Not enabled*.
+5. **VT-x/AMD-V disabled in BIOS/UEFI.** Enable Intel VT-x / AMD-V (a.k.a. SVM Mode) in firmware. (If a VM is already running with hardware accel, this is fine.)
+
+**Verify the fix:** `bcdedit /enum {current}` should show `hypervisorlaunchtype   Off`, and the green turtle should be gone from the running VM's status bar.
+
+### Trade-off: hypervisor off vs. WSL2 / other hypervisor apps
+
+Disabling the hypervisor to run VirtualBox at full speed also disables anything that relies on it — **WSL2, Docker (WSL2 backend), Windows Sandbox, Hyper-V VMs**. It's an either/or per boot. Switch sides with:
+
+- Hypervisor **off** (fast VirtualBox lab): `bcdedit /set hypervisorlaunchtype off` + reboot
+- Hypervisor **on** (WSL2 / Hyper-V / Sandbox): `bcdedit /set hypervisorlaunchtype auto` + reboot
+
+To avoid typing each time, create a **dual-boot menu entry** so you pick at startup:
+```
+bcdedit /copy {current} /d "Windows 11 - Lab (VirtualBox)"
+bcdedit /set {new-guid-printed-above} hypervisorlaunchtype off
+bcdedit /set {current} hypervisorlaunchtype auto
+bcdedit /timeout 10
+```
+Then choose the "Lab (VirtualBox)" entry at boot for lab work, or the default entry for WSL2/Hyper-V. Switching still requires a reboot — that's inherent to how Windows shares the virtualization hardware.
+
 ## Findings / result
 
 | Machine | Role | IP | State |
