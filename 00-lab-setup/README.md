@@ -79,6 +79,34 @@ Microsoft publishes **free Windows 11 Enterprise evaluation VMs that officially 
 
 *(Screenshot: Windows 11 desktop + `ipconfig` showing .20.)*
 
+> If installing from the eval **ISO** instead of a pre-built image: create a new VM (EFI + TPM 2.0 enabled for Windows 11), attach the ISO, and install normally — choose **"I don't have a product key"** and the **Enterprise Evaluation** edition (90 days free).
+
+### Assigning the static IP (Windows 11)
+
+**In VirtualBox first** — put the VM on the isolated network: power off the VM → **Settings → Network → Adapter 1 → Attached to: Host-only Adapter**, select the `192.168.56.x` network → **OK** → boot. (Optionally enable Adapter 2 as NAT if you need internet inside Windows to download tools later.)
+
+**Inside Windows** — set the address:
+
+1. **Start → Settings → Network & Internet → Ethernet.**
+2. Click the Ethernet connection to expand it, find **IP assignment**, click **Edit**.
+3. Change **Automatic (DHCP)** to **Manual**, toggle **IPv4** to **On**, and enter:
+   - IP address: `192.168.56.20`
+   - Subnet mask / prefix length: `255.255.255.0` (or `24`)
+   - Gateway: **blank**, DNS: **blank** (host-only has no internet route)
+4. **Save.**
+
+*Classic alternative:* `Win+R` → `ncpa.cpl` → right-click **Ethernet → Properties → Internet Protocol Version 4 (TCP/IPv4) → Properties → Use the following IP address** → `192.168.56.20` / `255.255.255.0`, gateway blank → OK.
+
+**Verify:** open Command Prompt → `ipconfig` → confirm `IPv4 Address . . . : 192.168.56.20`.
+
+**Allow ping for connectivity tests** — Windows Firewall blocks ICMP by default, so pings from Kali will fail until you add a rule. In an **admin** Command Prompt on the Windows VM:
+
+```
+netsh advfirewall firewall add rule name="Allow ICMPv4-In" protocol=icmpv4:8,any dir=in action=allow
+```
+
+Then `ping 192.168.56.20` from Kali should succeed.
+
 ## Step 5 — Build the SIEM host: Ubuntu Server
 
 1. Download the **Ubuntu Server LTS** ISO from ubuntu.com. Create a new VM (2 vCPU, 4 GB RAM min, 40 GB disk).
