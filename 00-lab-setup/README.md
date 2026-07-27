@@ -77,7 +77,7 @@ Microsoft publishes **free Windows 11 Enterprise evaluation VMs that officially 
 
 > Note: the eval VM turns the desktop black and shuts down hourly once expired. Take a clean snapshot early so you can always roll back to a fresh state.
 
-*(Screenshot: Windows 11 desktop + `ipconfig` showing .20.)*
+![victim windows 11 account VM showing ip address as 192.168.56.20](images/Step4.png)
 
 > If installing from the eval **ISO** instead of a pre-built image: create a new VM (EFI + TPM 2.0 enabled for Windows 11), attach the ISO, and install normally — choose **"I don't have a product key"** and the **Enterprise Evaluation** edition (90 days free).
 
@@ -109,13 +109,62 @@ Then `ping 192.168.56.20` from Kali should succeed.
 
 ## Step 5 — Build the SIEM host: Ubuntu Server
 
-1. Download the **Ubuntu Server LTS** ISO from ubuntu.com. Create a new VM (2 vCPU, 4 GB RAM min, 40 GB disk).
-2. Install Ubuntu (minimal server). Set adapter to **host-only**, assign IP `192.168.56.30`.
-3. Update: `sudo apt update && sudo apt upgrade -y` (do this with NAT temporarily attached, then remove it).
+This VM hosts Splunk in **Lab 01**. It's special because it needs *both* the isolated lab network (to receive logs) and internet (to download Splunk and updates) — so it gets two adapters.
 
-This VM will host Splunk in **Lab 01**.
+**Download:** the latest **Ubuntu Server LTS** ISO from ubuntu.com (~2–3 GB).
 
-*(Screenshot: Ubuntu login + `ip a` showing .30.)*
+**Create the VM:** VirtualBox → New → name `Ubuntu-SIEM`, attach the ISO, check *Skip Unattended Installation*. 4096 MB RAM, 2 CPUs, 40 GB disk.
+
+**Two network adapters** (Settings → Network):
+
+- **Adapter 1:** Host-only Adapter, the `192.168.56.x` network → becomes `enp0s3` (lab-facing).
+- **Adapter 2:** enable, NAT → becomes `enp0s8` (internet).
+
+**Install Ubuntu:** boot the VM → *Try or Install Ubuntu Server*. Language/keyboard → leave both NICs on DHCP for now → default storage (whole disk) → set username/password (**no default login here**) → **check "Install OpenSSH server"** (lets you SSH in from the host, where copy/paste works) → skip snaps → reboot.
+
+**Set the static IP (netplan):** Ubuntu Server uses netplan, not a GUI. After login:
+
+```bash
+ip a                    # find interface names (enp0s3 = host-only, enp0s8 = NAT)
+sudo nano /etc/netplan/50-cloud-init.yaml
+```
+
+Make it read exactly (2 spaces per indent, no tabs):
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses: [192.168.56.30/24]
+    enp0s8:
+      dhcp4: yes
+```
+
+Save (Ctrl+O, Enter), exit (Ctrl+X), then apply:
+
+```bash
+sudo netplan apply
+ip a                    # confirm enp0s3 = 192.168.56.30
+```
+
+**Update:**
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+> **Tip — SSH in for copy/paste:** the server console has no clipboard sharing. Either SSH from the host over host-only (`ssh user@192.168.56.30`) once the static IP is set, or add a NAT port-forward (Adapter 2 → Advanced → Port Forwarding: host 2222 → guest 22) and `ssh user@127.0.0.1 -p 2222`. Pasting works in the host terminal.
+
+**Verify both networks:**
+
+```bash
+ping -c3 192.168.56.20   # lab connectivity to the Windows victim
+ping -c3 8.8.8.8         # internet via NAT (needed to download Splunk)
+```
+
+*(Screenshot: Ubuntu login + `ip a` showing .30, plus both pings succeeding.)*
 
 ## Step 6 — Verify connectivity and lock it down
 
@@ -163,6 +212,17 @@ bcdedit /set {current} hypervisorlaunchtype auto
 bcdedit /timeout 10
 ```
 Then choose the "Lab (VirtualBox)" entry at boot for lab work, or the default entry for WSL2/Hyper-V. Switching still requires a reboot — that's inherent to how Windows shares the virtualization hardware.
+
+## Troubleshooting: VMs can't ping each other
+
+Symptoms and their real causes, from the sender's point of view:
+
+- **"Network is unreachable"** — the *sending* VM has no IP on `192.168.56.0/24`. Its adapter is on NAT/"Not attached", or the static IP never applied. Fix the sender's adapter/IP first.
+- **"Destination host unreachable"** + `ip neigh` shows the target as `FAILED` — the sender is on the subnet but gets no ARP reply. The two machines aren't actually on the same segment, or the target is down. Check, in order:
+  1. **Target VM is powered on** and holds the right IP (`ipconfig` / `ip a`).
+  2. **Both VMs' Adapter 1 point to the *identical* host-only network name** (VirtualBox can have several — `...Adapter`, `...Adapter #2`; mismatched ones are isolated from each other).
+  3. **The virtual cable is connected.** Settings → Network → Adapter 1 → Advanced → **Cable Connected** must be checked. An unplugged virtual cable gives correct IPs on both ends but no ARP reply — exactly a `FAILED` neighbor entry.
+- **"Request timed out"** (not "host unreachable") — layer-2 is fine; this is usually the target's **firewall dropping ICMP**. Allow ping (e.g. the `netsh` ICMPv4-In rule on Windows).
 
 ## Findings / result
 
