@@ -5,7 +5,7 @@
 **Domain:** SIEM & Log Analysis
 **Tools:** Splunk Free, Ubuntu Server
 **MITRE ATT&CK:** N/A (tooling)
-**Date:** _fill in_
+**Date:** 07/27/2026
 
 ---
 
@@ -22,7 +22,6 @@ Splunk Free lets me index **up to 500 MB of data per day** — far more than a s
 - SIEM host: Ubuntu Server, 192.168.56.30 (from Lab 00)
 - Access from host browser over the host-only network
 
-*(Before starting: take a VM snapshot named `pre-splunk`.)*
 
 ## Step 1 — Get the Splunk installer
 
@@ -31,6 +30,7 @@ Splunk requires a free account to download. Two ways to get the `.deb` onto the 
 - Download the **Linux .deb** from splunk.com on your host, then copy it to the VM (shared folder or `scp`), **or**
 - Temporarily attach a NAT adapter to the VM and `wget` the download link Splunk gives you, then remove NAT.
 
+![the .deb file present on the Ubuntu VM via `ls -lh`](images/Step1.png)
 *(Screenshot: the .deb file present on the Ubuntu VM via `ls -lh`.)*
 
 ## Step 2 — Install the package
@@ -50,6 +50,7 @@ sudo /opt/splunk/bin/splunk start --accept-license
 
 On first run Splunk will prompt you to create an **administrator username and password** — set these and note them (you'll use them to log into Splunk Web).
 
+![the "Splunk Web is running" message showing the URL, e.g. `http://192.168.56.30:8000`](images/Step2.png)
 *(Screenshot: the "Splunk Web is running" message showing the URL, e.g. `http://<host>:8000`.)*
 
 ## Step 4 — Enable boot-start (so it survives reboots)
