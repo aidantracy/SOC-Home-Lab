@@ -236,7 +236,11 @@ A three-machine, host-only lab with confirmed internal connectivity and confirme
 
 ## Lessons learned
 
-Learning how to leverage AI to assist in understanding things that dont make sense or the technicality may be a little over my head. I learned alot from setting up the virtual machines and learning how to assign IP addresses to these different VMs. I also learned how to trouble shoot the settings of the VMs to understand why the windows machine was not connecting appropriately. 
+This lab taught me as much about troubleshooting and problem-solving as it did about the technology itself. A big takeaway was learning how to leverage AI to work through concepts that didn't make sense or were a little over my head — using it to understand the reasoning behind each step instead of just copying commands.
+
+Building the virtual machines from scratch taught me how hypervisors, virtual networking, and static IP assignment actually work, and why each VM has to sit on the same host-only network to communicate with the others. I also ran into the conflict between VirtualBox and the Windows hypervisor (VBS/Hyper-V), which pushed me to understand what virtualization-based security is and how to toggle it.
+
+The most valuable part was troubleshooting the network. When the Windows machine wouldn't connect, I had to work through the VM's settings layer by layer — confirming each machine's IP address, making sure the host-only adapter names matched, and eventually discovering that the virtual network cable was disconnected. Learning to narrow a problem down from "it doesn't work" to a specific root cause is exactly the kind of methodical thinking a SOC role requires.
 
 ## References
 
