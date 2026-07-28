@@ -73,6 +73,7 @@ sudo /opt/splunk/bin/splunk restart
 
 > Keep the Enterprise trial instead if you want to practice **alerting** now — just remember it reverts to a restricted state after 60 days. You can always switch to Free later.
 
+![ Settings → Licensing showing the Free license active.](images/Step3.png)
 *(Screenshot: Settings → Licensing showing the Free license active.)*
 
 ## Step 6 — Confirm it works with a test ingest
@@ -93,7 +94,12 @@ You should see your events. Try a time-based search and a simple stats command:
 index=main | stats count by sourcetype
 ```
 
+![Setting up setting up monitor for temp folder for log ingestion.](images/Step5.png)
+*(Screenshot: Setting up setting up monitor for temp folder for log ingestion.)*
+
+![search results showing ingested events — this is your proof the SIEM works.](images/Step6.png)
 *(Screenshot: search results showing ingested events — this is your proof the SIEM works.)*
+
 
 ## Step 7 — Open the receiving port for the next lab
 
@@ -102,6 +108,7 @@ To let the Windows endpoint forward logs in Lab 02, enable a receiver:
 1. **Settings → Forwarding and receiving → Configure receiving → New Receiving Port**.
 2. Add port **9997** (the standard Splunk forwarder port) and save.
 
+![receiving port 9997 listed as enabled.](images/Step4.png)
 *(Screenshot: receiving port 9997 listed as enabled.)*
 
 ## Findings / result
