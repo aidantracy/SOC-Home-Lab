@@ -125,7 +125,11 @@ A working SIEM, ready to receive endpoint telemetry.
 
 ## Lessons learned
 
-_Fill in — e.g., the Free-vs-trial licensing tradeoff, any port/firewall issue, first impressions of SPL._
+This lab was my first time standing up a SIEM from the command line instead of a GUI, and it taught me a lot about how Splunk actually runs on a server. One of the first lessons was choosing to run Splunk under a dedicated non-root service account instead of as root — a small change, but a good security habit and something I can speak to in an interview.
+
+A few practical things stuck with me. Large package installs like Splunk's can sit on "Setting up..." for several minutes, and interrupting them can corrupt the install, so patience matters. A headless Ubuntu server has no clipboard sharing, so SSHing in from my host made pasting commands and the whole workflow far smoother — and it's how real admins work anyway. Configuring the static IP meant editing netplan YAML, where indentation is strict and a single wrong space breaks the config.
+
+Getting logs to ingest also taught me a permissions lesson: because Splunk runs as the `splunk` user, any file I want it to read has to be readable by that user, which is why I had to `chmod` the log file before monitoring it. Finally, I learned the difference between the Free license and the Enterprise trial — Free runs forever but drops alerting and login, so I kept the trial for now since my later detection labs will need alerting. Seeing my first events parsed as syslog and searchable with SPL made the whole collect → index → search pipeline finally click.
 
 ## Next lab
 
