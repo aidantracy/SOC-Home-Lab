@@ -164,14 +164,14 @@ ping -c3 192.168.56.20   # lab connectivity to the Windows victim
 ping -c3 8.8.8.8         # internet via NAT (needed to download Splunk)
 ```
 
-*(Screenshot: Ubuntu login + `ip a` showing .30, plus both pings succeeding.)*
+![Ubuntu IP 192.168.56.30](images/Step5.png)
 
 ## Step 6 — Verify connectivity and lock it down
 
 1. From Kali, ping the other two: `ping 192.168.56.20` and `ping 192.168.56.30`. (You may need to allow ICMP through the Windows firewall for the ping test.)
 2. Confirm **none** of the VMs can reach the internet: `ping 8.8.8.8` should fail. If it succeeds, you still have a NAT/bridged adapter attached — remove it.
 
-*(Screenshot: successful internal ping + failed external ping — this is your proof of isolation.)*
+![Verification everything is connected and external internet is not connected from kali](images/Step6.png)
 
 ## Step 7 — Snapshot everything
 
@@ -236,7 +236,7 @@ A three-machine, host-only lab with confirmed internal connectivity and confirme
 
 ## Lessons learned
 
-_Fill in as you go — e.g., a networking gotcha you hit, why you chose static IPs, how snapshots saved you._
+Learning how to leverage AI to assist in understanding things that dont make sense or the technicality may be a little over my head. I learned alot from setting up the virtual machines and learning how to assign IP addresses to these different VMs. I also learned how to trouble shoot the settings of the VMs to understand why the windows machine was not connecting appropriately. 
 
 ## References
 
