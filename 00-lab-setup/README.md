@@ -138,7 +138,7 @@ A three-machine, internal-switch lab with confirmed internal connectivity and co
 
 ## Lessons learned
 
-_Fill in as you go — e.g., why Hyper-V over VirtualBox on this host (VBS/Memory Integrity conflict), the Gen-2 Secure Boot gotcha for Linux guests, or how checkpoints saved you._
+When setting this up, I learned that it's important to plan the network topology carefully to ensure proper isolation and connectivity. Also, managing and maintaining the virtual environment requires attention to detail and a good understanding of the tools involved. Claude had a hard time with my other projects because I had to disable its hypervisor. I switched to windows 11 Education which has better support for virtualization and now both can run in unison. 
 
 ## References
 
