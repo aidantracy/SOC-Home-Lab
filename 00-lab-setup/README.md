@@ -77,6 +77,7 @@ This is the most important step. You'll create an **Internal** virtual switch, w
 3. **Important for Linux on Gen 2:** open the VM's **Settings → Security** and either uncheck **Enable Secure Boot** or set the template to **Microsoft UEFI Certificate Authority**, or Kali won't boot.
 4. Install Kali, log in, and assign a static IP `192.168.56.10` (via the network settings or `/etc/network/interfaces`).
 
+![Kali desktop + `ip a` output showing .10](images/kali-attacker-ipv4.png)
 *(Screenshot: Kali desktop + `ip a` output showing .10.)*
 
 ## Step 4 — Build the victim: Windows 11 Enterprise (evaluation)
