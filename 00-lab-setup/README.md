@@ -92,7 +92,8 @@ Microsoft publishes a **free Windows 11 Enterprise 90-day evaluation** — perfe
 
 > Take a clean **checkpoint** early so you can always roll back to a fresh state.
 
-*(Screenshot: Windows 11 desktop + `ipconfig` showing .20.)*
+![Windows 11 desktop showing IP as .20.](images/victim-ip.png)
+*(Screenshot: Windows 11 desktop showing IP as .20.)*
 
 ## Step 5 — Build the SIEM host: Ubuntu Server
 
