@@ -95,6 +95,12 @@ Microsoft publishes a **free Windows 11 Enterprise 90-day evaluation** — perfe
 ![Windows 11 desktop showing IP as .20.](images/victim-ip.png)
 *(Screenshot: Windows 11 desktop showing IP as .20.)*
 
+
+![*(successful internal connectivity between Kali and Windows victim VMs.)*](images/network-connect-verification-kali-victim.png)
+*(Screenshot: successful internal connectivity between Kali and Windows victim VMs.)*
+
+
+
 ## Step 5 — Build the SIEM host: Ubuntu Server
 
 1. Download the **Ubuntu Server LTS** ISO from ubuntu.com. Create a new **Generation 2** VM (2 vCPU, 4 GB RAM min, 40 GB disk), connect to **SOC-Lab**.
