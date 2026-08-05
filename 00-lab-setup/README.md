@@ -108,7 +108,7 @@ Microsoft publishes a **free Windows 11 Enterprise 90-day evaluation** — perfe
 3. Install Ubuntu (minimal server), assign IP `192.168.56.30`.
 
 This VM will host Splunk in **Lab 01**.
-
+![Ubuntu login + `ip a` showing .30.](images/ubuntu-ip.png)
 *(Screenshot: Ubuntu login + `ip a` showing .30.)*
 
 ## Step 6 — Temporary internet for updates, then lock it down
@@ -125,6 +125,7 @@ The SOC-Lab switch has no internet by design. To install updates and tools, temp
 2. From the host, confirm you can reach the VMs on `192.168.56.x` (this is why we used an Internal switch).
 3. Confirm **none** of the VMs can reach the internet: `ping 8.8.8.8` should fail. If it succeeds, you still have the Default Switch adapter attached — remove it.
 
+![successful internal ping + failed external ping — this is your proof of isolation.](images/network-isolation.png)
 *(Screenshot: successful internal ping + failed external ping — this is your proof of isolation.)*
 
 ## Step 8 — Checkpoint everything
